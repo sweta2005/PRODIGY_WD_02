@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stopwatch Web Application</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background-color: #f4f4f4;
+            padding: 50px;
+        }
+        h1 {
+            color: #333;
+        }
+        .stopwatch {
+            font-size: 2.5rem;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            display: inline-block;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
+        }
+        .buttons button {
+            font-size: 1rem;
+            padding: 10px 15px;
+            margin: 5px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: 0.3s;
+        }
+        .start { background: #285ba7; color: white; }
+        .stop { background: #35dcc6; color: white; }
+        .reset { background: #ffa600; color: white; }
+        .lap { background: #ea00ff; color: white; }
+        .buttons button:hover {
+            opacity: 0.8;
+        }
+        .laps {
+            margin-top: 20px;
+            max-width: 300px;
+            margin-left: auto;
+            margin-right: auto;
+            background: white;
+            padding: 10px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+            text-align: left;
+        }
+        .laps ol {
+            padding: 0;
+            list-style-type: none;
+        }
+        .laps li {
+            background: #f9f9f9;
+            margin: 5px 0;
+            padding: 5px 10px;
+            border-radius: 5px;
+            font-size: 1.2rem;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Stopwatch with Lap</h1>
+    <div class="stopwatch">00:00:00</div>
+    <div class="buttons">
+        <button class="start" onclick="startStopwatch()">Start</button>
+        <button class="stop" onclick="stopStopwatch()">Stop</button>
+        <button class="lap" onclick="recordLap()">Lap</button>
+        <button class="reset" onclick="resetStopwatch()">Reset</button>
+    </div>
+
+    <div class="laps">
+        <h3>Lap Times</h3>
+        <ol id="lapList"></ol>
+    </div>
+
+    <script>
+        let timer;
+        let seconds = 0, minutes = 0, hours = 0;
+        let running = false;
+        let lapCount = 0;
+
+        function startStopwatch() {
+            if (!running) {
+                running = true;
+                timer = setInterval(updateTime, 1000);
+            }
+        }
+
+        function stopStopwatch() {
+            running = false;
+            clearInterval(timer);
+        }
+
+        function resetStopwatch() {
+            running = false;
+            clearInterval(timer);
+            seconds = 0; minutes = 0; hours = 0;
+            lapCount = 0;
+            document.querySelector('.stopwatch').innerText = "00:00:00";
+            document.getElementById("lapList").innerHTML = "";
+        }
+
+        function recordLap() {
+            if (running) {
+                lapCount++;
+                const lapTime = document.querySelector('.stopwatch').innerText;
+                const lapItem = document.createElement("li");
+                lapItem.innerText = `Lap ${lapCount}: ${lapTime}`;
+                document.getElementById("lapList").appendChild(lapItem);
+            }
+        }
+
+        function updateTime() {
+            seconds++;
+            if (seconds == 60) {
+                seconds = 0;
+                minutes++;
+            }
+            if (minutes == 60) {
+                minutes = 0;
+                hours++;
+            }
+            document.querySelector('.stopwatch').innerText = 
+                (hours < 10 ? "0" + hours : hours) + ":" + 
+                (minutes < 10 ? "0" + minutes : minutes) + ":" + 
+                (seconds < 10 ? "0" + seconds : seconds);
+        }
+    </script>
+
+</body>
+</html>
